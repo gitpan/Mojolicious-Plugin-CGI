@@ -32,12 +32,10 @@
       },
       "runtime" : {
          "requires" : {
-            "CGI::Compile" : "0.01",
-            "Mojolicious" : "4.00",
-            "SelectSaver" : "0.01"
+            "Mojolicious" : "4.00"
          }
       }
    },
    "release_status" : "stable",
-   "version" : "0.02"
+   "version" : "0.03"
 }

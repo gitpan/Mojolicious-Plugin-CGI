@@ -18,7 +18,5 @@ no_index:
     - t
     - inc
 requires:
-  CGI::Compile: 0.01
   Mojolicious: 4.00
-  SelectSaver: 0.01
-version: 0.02
+version: 0.03
