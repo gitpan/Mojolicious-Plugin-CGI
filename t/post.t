@@ -14,6 +14,17 @@ my $t = Test::Mojo->new;
 
 $t->post_ok('/postman', {}, "some\ndata\n")
   ->status_is(200)
-  ->content_is("--- some\n--- data\n");
+  ->content_like(qr{^\d+\n--- some\n--- data\n$});
+
+my $pid = $t->tx->res->body =~ /(\d+)/ ? $1 : 0;
+
+diag $pid;
+
+if($pid) {
+  ok !(kill 0, $pid), 'child is taken care of';
+}
+else {
+  ok $pid, 'could not get pid';
+}
 
 done_testing;

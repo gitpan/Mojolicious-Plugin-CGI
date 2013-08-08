@@ -2,4 +2,5 @@
 use strict;
 use warnings;
 print "Content-Type: text/custom\n\r\n\r";
+print "$$\n";
 print "--- $_" while <STDIN>;
