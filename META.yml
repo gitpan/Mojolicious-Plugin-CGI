@@ -19,4 +19,6 @@ no_index:
     - inc
 requires:
   Mojolicious: 4.00
-version: 0.06
+resources:
+  repository: https://github.com/jhthorsen/mojolicious-plugin-cgi
+version: 0.0601

@@ -37,5 +37,10 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.06"
+   "resources" : {
+      "repository" : {
+         "url" : "https://github.com/jhthorsen/mojolicious-plugin-cgi"
+      }
+   },
+   "version" : "0.0601"
 }
