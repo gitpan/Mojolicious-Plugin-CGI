@@ -6,7 +6,7 @@ Mojolicious::Plugin::CGI - Run CGI script from Mojolicious
 
 =head1 VERSION
 
-0.0601
+0.07
 
 =head1 DESCRIPTION
 
@@ -23,6 +23,7 @@ matter.
     route => '/mount/point',
     script => '/path/to/cgi/script.pl',
     env => {}, # default is \%ENV
+    errlog => '/path/to/file.log', # path to where STDERR from cgi script goes
     before => sub { # called before setup and script start
       my $c = shift;
       # modify QUERY_STRING
@@ -44,7 +45,7 @@ use constant CHUNK_SIZE => 131072;
 use constant CHECK_CHILD_INTERVAL => $ENV{CHECK_CHILD_INTERVAL} || 0.01;
 use constant DEBUG => $ENV{MOJO_PLUGIN_CGI_DEBUG} || 0;
 
-our $VERSION = '0.0601';
+our $VERSION = '0.07';
 our %ORIGINAL_ENV = %ENV;
 
 =head1 METHODS
@@ -88,10 +89,14 @@ sub emulate_environment {
   my $tx = $c->tx;
   my $req = $tx->req;
   my $headers = $req->headers;
-  my $base_path = $req->url->base->path;
-  my $script_name = $req->url->path;
+  my $remote_user = '';
 
-  $script_name =~ s!^/?\Q$base_path\E/?!!;
+  if(my $userinfo = $c->req->url->to_abs->userinfo) {
+    $remote_user = $userinfo =~ /([^:]+)/ ? $1 : '';
+  }
+  elsif($c->session('username')) {
+    $remote_user = $c->session('username');
+  }
 
   my $content_length = $req->content->is_multipart
     ? $req->body_size : $headers->content_length;
@@ -107,15 +112,15 @@ sub emulate_environment {
     HTTP_USER_AGENT => $headers->user_agent || '',
     HTTPS => $req->is_secure ? 'YES' : 'NO',
     #PATH => $req->url->path,
-    PATH_INFO => $req->url->path,
+    PATH_INFO => '/' .($c->stash('path_info') || ''),
     QUERY_STRING => $req->url->query->to_string,
     REMOTE_ADDR => $tx->remote_address,
     REMOTE_HOST => gethostbyaddr(inet_aton($tx->remote_address || '127.0.0.1'), AF_INET) || '',
     REMOTE_PORT => $tx->remote_port,
-    REMOTE_USER => $c->session('username') || '', # TODO: Should probably be configurable
+    REMOTE_USER => $remote_user,
     REQUEST_METHOD => $req->method,
     SCRIPT_FILENAME => $self->{script},
-    SCRIPT_NAME => $script_name,
+    SCRIPT_NAME => $self->{route}->render(''),
     SERVER_ADMIN => $ENV{USER} || '',
     SERVER_NAME => hostname,
     SERVER_PORT => $tx->local_port,
@@ -156,7 +161,8 @@ sub register {
   $self->{script} = File::Spec->rel2abs($self->{script});
   -r $self->{script} or die "Cannot read $self->{script}";
   $self->{name} = basename $self->{script};
-  $self->{route} = $app->routes->any($self->{route}) unless ref $self->{route};
+  $self->{route} = $app->routes->any("$self->{route}/*path_info", { path_info => '' }) unless ref $self->{route};
+  $self->{prefix_length} = length $self->{route}->render('');
   $self->{route}->to(cb => sub {
     my $c = shift->render_later;
     my $ioloop = Mojo::IOLoop->singleton;
@@ -196,6 +202,7 @@ sub register {
       close $stdout_read;
       open STDIN, '<', $stdin->path or die "Could not open @{[$stdin->path]}: $!" if -s $stdin->path;
       open STDOUT, '>&' . fileno $stdout_write or die $!;
+      open STDERR, '>>', $self->{errlog} if $self->{errlog};
       select STDOUT;
       $| = 1;
       { exec $self->{script} }

@@ -1,12 +1,12 @@
 {
-   "abstract" : "unknown",
+   "abstract" : "Run CGI script from Mojolicious",
    "author" : [
       "Jan Henning Thorsen <jhthorsen@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.131560",
+   "generated_by" : "ExtUtils::MakeMaker version 6.66, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "unknown"
+      "perl_5"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -22,7 +22,7 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "0"
+            "Test::More" : "0.9"
          }
       },
       "configure" : {
@@ -38,9 +38,16 @@
    },
    "release_status" : "stable",
    "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/jhthorsen/mojolicious-plugin-cgi/issues"
+      },
+      "homepage" : "https://metacpan.org/module/Mojolicious::Plugin::CGI",
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ],
       "repository" : {
          "url" : "https://github.com/jhthorsen/mojolicious-plugin-cgi"
       }
    },
-   "version" : "0.0601"
+   "version" : "0.07"
 }
