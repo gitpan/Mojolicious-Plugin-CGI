@@ -6,7 +6,7 @@ Mojolicious::Plugin::CGI - Run CGI script from Mojolicious
 
 =head1 VERSION
 
-0.07
+0.08
 
 =head1 DESCRIPTION
 
@@ -45,7 +45,7 @@ use constant CHUNK_SIZE => 131072;
 use constant CHECK_CHILD_INTERVAL => $ENV{CHECK_CHILD_INTERVAL} || 0.01;
 use constant DEBUG => $ENV{MOJO_PLUGIN_CGI_DEBUG} || 0;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 our %ORIGINAL_ENV = %ENV;
 
 =head1 METHODS
@@ -203,8 +203,8 @@ sub register {
       open STDIN, '<', $stdin->path or die "Could not open @{[$stdin->path]}: $!" if -s $stdin->path;
       open STDOUT, '>&' . fileno $stdout_write or die $!;
       open STDERR, '>>', $self->{errlog} if $self->{errlog};
-      select STDOUT;
-      $| = 1;
+      select STDERR; $| = 1;
+      select STDOUT; $| = 1;
       { exec $self->{script} }
       die "Could not execute $self->{script}: $!";
     }
@@ -256,6 +256,13 @@ sub _stdout_callback {
     $c->write($buf) if length $buf;
   }
 }
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2014, Jan Henning Thorsen
+
+This program is free software, you can redistribute it and/or modify it under
+the terms of the Artistic License version 2.0.
 
 =head1 AUTHOR
 

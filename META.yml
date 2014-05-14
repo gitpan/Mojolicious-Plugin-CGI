@@ -24,4 +24,4 @@ resources:
   homepage: https://metacpan.org/module/Mojolicious::Plugin::CGI
   license: http://dev.perl.org/licenses/
   repository: https://github.com/jhthorsen/mojolicious-plugin-cgi
-version: 0.07
+version: 0.08
