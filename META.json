@@ -32,6 +32,7 @@
       },
       "runtime" : {
          "requires" : {
+            "IO::Pipely" : "0.005",
             "Mojolicious" : "4.00"
          }
       }
@@ -46,5 +47,5 @@
          "url" : "https://github.com/jhthorsen/mojolicious-plugin-cgi.git"
       }
    },
-   "version" : "0.10"
+   "version" : "0.11"
 }

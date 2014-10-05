@@ -19,6 +19,7 @@ WriteMakefile(
 }
 ,
   PREREQ_PM => {
+  'IO::Pipely' => '0.005',
   'Mojolicious' => '4.00'
 }
 ,
