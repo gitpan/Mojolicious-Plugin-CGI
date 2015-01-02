@@ -19,9 +19,9 @@ no_index:
     - inc
 requires:
   IO::Pipely: 0.005
-  Mojolicious: 4.00
+  Mojolicious: 5.08
 resources:
   bugtracker: https://github.com/jhthorsen/mojolicious-plugin-cgi/issues
   homepage: https://github.com/jhthorsen/mojolicious-plugin-cgi
   repository: https://github.com/jhthorsen/mojolicious-plugin-cgi.git
-version: 0.15
+version: 0.16

@@ -20,7 +20,7 @@ WriteMakefile(
 ,
   PREREQ_PM => {
   'IO::Pipely' => '0.005',
-  'Mojolicious' => '4.00'
+  'Mojolicious' => '5.08'
 }
 ,
   test => { TESTS => 't/*.t' },
